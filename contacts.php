@@ -1,17 +1,21 @@
 <?php
-require 'db.php';
+$app = require __DIR__ . '/bootstrap.php';
+$pdo = $app['pdo'];
 
 try {
-    $stmt = $pdo->prepare('SELECT * FROM contacts');
+    $stmt = $pdo->prepare('SELECT id, name, email, message FROM contacts');
     $stmt->execute();
-    $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $contacts = $stmt->fetchAll();
 
 } catch (PDOException $e) {
-    echo "DBエラー: ".$e->getMessage();
-    exit;
+    error_log("DBエラー: " . $e->getMessage());
+    exit('DB接続エラーが発生しました。');
 }
 ?>
 
+<?php if (empty($contacts)): ?>
+    <p>お問い合わせ内容はまだありません。</p>
+<?php else: ?>
 
     <table border="1">
         <tr>
@@ -31,3 +35,4 @@ try {
         </tr>
         <?php endforeach; ?>
     </table>
+<?php endif; ?>

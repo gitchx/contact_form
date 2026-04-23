@@ -1,5 +1,6 @@
 <?php
-require 'db.php';
+$app = require __DIR__ . '/bootstrap.php';
+$pdo = $app['pdo'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $name = trim($_POST['name'] ?? '');
@@ -20,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     echo "お問い合わせ内容を送信しました。";
     } catch (PDOException $e) {
-        echo "DBエラー: ".$e->getMessage();
+        error_log("DBエラー: " . $e->getMessage());
+        exit('DB接続エラーが発生しました。');
     }
 }

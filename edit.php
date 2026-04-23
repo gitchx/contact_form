@@ -1,5 +1,6 @@
 <?php
-require 'db.php';
+$app = require __DIR__ . '/bootstrap.php';
+$pdo = $app['pdo'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET'){
 
