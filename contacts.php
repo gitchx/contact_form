@@ -2,6 +2,10 @@
 $app = require __DIR__ . '/bootstrap.php';
 $pdo = $app['pdo'];
 
+if (empty($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
 try {
     $stmt = $pdo->prepare('SELECT id, name, email, message FROM contacts');
     $stmt->execute();
@@ -35,6 +39,7 @@ try {
             <td><a href="edit.php?id=<?= htmlspecialchars($contact['id'], ENT_QUOTES, 'UTF-8') ?>">編集</a></td>
             <td>
                 <form action="delete.php" method="post" style="display:inline;"  onsubmit="return confirm('本当に削除しますか？');">
+                    <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['token'], ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($contact['id'], ENT_QUOTES, 'UTF-8') ?>">
                     <button type="submit">削除</button>
                 </form>

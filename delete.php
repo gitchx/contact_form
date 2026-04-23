@@ -3,10 +3,15 @@ $app = require __DIR__ . '/bootstrap.php';
 $pdo = $app['pdo'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $id = $_POST['id'] ?? null;
+    $id = $_POST['id'] ?? '';
+    $token = $_POST['token'] ?? '';
 
     if (!ctype_digit($id)){
         exit('IDが不正です。');
+    }
+
+    if (empty($_SESSION['token']) || empty($token) || !hash_equals($_SESSION['token'], $token)) {
+        exit('不正なリクエストです。');
     }
 
 
@@ -21,3 +26,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         exit('DB接続エラーが発生しました。');
     }
 }
+
+exit('不正なアクセスです。');
